@@ -15,6 +15,7 @@ namespace ChuckNorrisIsAwesome
         public async Task DoWork()
         {
             var chuck = AsciiArt.GetChuckArt();
+            var index = 0;
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
 
@@ -35,7 +36,6 @@ namespace ChuckNorrisIsAwesome
             while (true)
             {
                 var cki = Console.ReadKey();
-                var index = 0;
 
                 ChuckNorrisFact chuckNorrisFact;
 
@@ -52,6 +52,7 @@ namespace ChuckNorrisIsAwesome
                 else if (cki.Key == ConsoleKey.P)
                 {
                     chuckNorrisFact = _cachedJokeService.GetPreviousJokeFromCache(index - 1);
+                    index--;
                     Console.WriteLine(
                         "============================================================================================");
                     Console.WriteLine(chuckNorrisFact.Value);
@@ -60,7 +61,8 @@ namespace ChuckNorrisIsAwesome
                 }
                 else if (cki.Key == ConsoleKey.N)
                 {
-                    chuckNorrisFact = _cachedJokeService.GetNextJokeFromCache(index + 1);
+                    chuckNorrisFact = await _cachedJokeService.GetNextJokeFromCache(index + 1);
+                    index++;
                     Console.WriteLine(
                         "============================================================================================");
                     Console.WriteLine(chuckNorrisFact.Value);

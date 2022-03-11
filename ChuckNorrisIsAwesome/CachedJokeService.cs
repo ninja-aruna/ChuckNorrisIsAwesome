@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,39 +20,36 @@ namespace ChuckNorrisIsAwesome
         {
             _cache = cache;
             _configuration = configuration;
-
             _chuckNorrisFactRetriever = chuckNorrisFactRetriever;
         }
 
         public async Task<ChuckNorrisFact> GetNewJoke()
         {
             var chuckNorrisFactFromApi = await _chuckNorrisFactRetriever.GetChuckNorrisFactFromApi();
+            _allJokesList.Add(chuckNorrisFactFromApi);
 
             return await GetOrSetValueInCache(chuckNorrisFactFromApi);
         }
 
         public ChuckNorrisFact GetPreviousJokeFromCache(int index)
         {
-            //TODO: check for index out of range
-            return _allJokesList.ElementAt(index);
+            return index < 0 ? _allJokesList.LastOrDefault() : _allJokesList.ElementAt(index);
         }
 
-        public ChuckNorrisFact GetNextJokeFromCache(int index)
+        public async Task<ChuckNorrisFact> GetNextJokeFromCache(int index)
         {
-            //TODO: check for index out of range
-            //TODO: if no item exists at next location, get new joke
+            if (index <= _allJokesList.Count - 1) return _allJokesList.ElementAt(index);
+
+            var chuckNorrisFactFromApi = await _chuckNorrisFactRetriever.GetChuckNorrisFactFromApi();
+            _allJokesList.Add(chuckNorrisFactFromApi);
+
             return _allJokesList.ElementAt(index);
         }
 
         public async Task PopulateCache(int numberOfJokes)
         {
-            var chuckNorrisFactFromApi = await _chuckNorrisFactRetriever.GetChuckNorrisFactFromApi();
-
             for (var i = 0; i < numberOfJokes; i++)
-            {
-                await GetOrSetValueInCache(chuckNorrisFactFromApi);
-                _allJokesList.Add(chuckNorrisFactFromApi);
-            }
+                _allJokesList.Add(await _chuckNorrisFactRetriever.GetChuckNorrisFactFromApi());
         }
 
         private async Task<ChuckNorrisFact> GetOrSetValueInCache(ChuckNorrisFact chuckNorrisFactFromApi)

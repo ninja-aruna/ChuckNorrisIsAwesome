@@ -16,7 +16,7 @@ namespace ChuckNorrisIsAwesome
     {
         private static async Task Main()
         {
-            var host = CreateDefaultBuilder().Build();
+            var host = await CreateDefaultBuilder().UseConsoleLifetime().StartAsync();
 
             using var serviceScope = host.Services.CreateScope();
             var provider = serviceScope.ServiceProvider;
@@ -34,10 +34,10 @@ namespace ChuckNorrisIsAwesome
                 {
                     services.AddSingleton<Worker>();
                     services.AddMemoryCache();
-                    services.AddHostedService<CacheWamUpService>();
                     services.AddHttpClient();
                     services.AddScoped<IChuckNorrisFactRetriever, ChuckNorrisFactRetriever>();
                     services.AddScoped<ICachedJokeService, CachedJokeService>();
+                    services.AddHostedService<CacheWamUpService>();
                 });
         }
     }

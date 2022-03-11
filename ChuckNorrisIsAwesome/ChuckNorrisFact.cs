@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace ChuckNorrisIsAwesome
 {
+    [Serializable]
     public class ChuckNorrisFact
     {
         [JsonPropertyName("icon_url")] public string IconUrl { get; set; }

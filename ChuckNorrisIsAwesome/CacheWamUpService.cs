@@ -21,7 +21,7 @@ namespace ChuckNorrisIsAwesome
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _cachedJokeService.PopulateCache(Convert.ToInt32(_configuration["InitialNumberOfJokes"]));
+                await _cachedJokeService.PopulateCache(Convert.ToInt32(_configuration["InitialNumberOfJokes"]));
                 await Task.Delay(
                     new TimeSpan(Convert.ToInt32(_configuration["WarmUpDelayInHours"]), 0, 0),
                     stoppingToken);
